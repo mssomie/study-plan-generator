@@ -1,0 +1,125 @@
+{
+    "reviews": [
+      {
+        "professor": "Dr. Emily Johnson",
+        "subject": "Introduction to Psychology",
+        "stars": 5,
+        "review": "Dr. Johnson is an amazing professor! Her lectures are engaging, and she genuinely cares about her students."
+      },
+      {
+        "professor": "Professor Michael Lee",
+        "subject": "Calculus I",
+        "stars": 4,
+        "review": "Great professor, but the material can be tough. He explains concepts well, though you need to put in the effort."
+      },
+      {
+        "professor": "Dr. Sarah Thompson",
+        "subject": "Organic Chemistry",
+        "stars": 3,
+        "review": "Dr. Thompson knows her stuff, but her exams are really challenging. Be prepared to study hard."
+      },
+      {
+        "professor": "Professor James Harris",
+        "subject": "World History",
+        "stars": 2,
+        "review": "Lectures are a bit dry, and the grading is tough. Not my favorite class."
+      },
+      {
+        "professor": "Dr. Laura Martinez",
+        "subject": "Introduction to Sociology",
+        "stars": 5,
+        "review": "Dr. Martinez is incredible! She makes complex topics easy to understand and always encourages discussion."
+      },
+      {
+        "professor": "Professor John Smith",
+        "subject": "Physics I",
+        "stars": 4,
+        "review": "Good professor with clear explanations. The labs are a bit time-consuming, but overall a solid class."
+      },
+      {
+        "professor": "Dr. Karen Williams",
+        "subject": "American Literature",
+        "stars": 3,
+        "review": "The reading load is heavy, and Dr. Williams expects a lot from students. Be ready to work."
+      },
+      {
+        "professor": "Professor David Brown",
+        "subject": "Macroeconomics",
+        "stars": 5,
+        "review": "Professor Brown is the best! His lectures are interesting, and he’s always available to help outside of class."
+      },
+      {
+        "professor": "Dr. Jessica Taylor",
+        "subject": "Biology 101",
+        "stars": 4,
+        "review": "Dr. Taylor is great at explaining difficult concepts. The exams are fair but require thorough preparation."
+      },
+      {
+        "professor": "Professor Thomas Anderson",
+        "subject": "Philosophy 101",
+        "stars": 3,
+        "review": "The material is interesting, but Professor Anderson can be hard to follow at times. The discussions are engaging, though."
+      },
+      {
+        "professor": "Dr. Michelle White",
+        "subject": "Environmental Science",
+        "stars": 5,
+        "review": "Dr. White is passionate about the subject and it shows in her teaching. Highly recommend taking her class."
+      },
+      {
+        "professor": "Professor Robert Green",
+        "subject": "Statistics",
+        "stars": 4,
+        "review": "Solid professor who makes a challenging subject manageable. The assignments are tough but fair."
+      },
+      {
+        "professor": "Dr. Linda Moore",
+        "subject": "Human Anatomy",
+        "stars": 3,
+        "review": "Dr. Moore is knowledgeable, but her lectures can be a bit monotone. The labs are well-organized, though."
+      },
+      {
+        "professor": "Professor Kevin Clark",
+        "subject": "Political Science",
+        "stars": 2,
+        "review": "Not a fan of Professor Clark’s teaching style. The lectures feel rushed and not very engaging."
+      },
+      {
+        "professor": "Dr. Amy Nelson",
+        "subject": "Microeconomics",
+        "stars": 5,
+        "review": "Dr. Nelson is fantastic! She’s clear, concise, and makes sure everyone understands the material."
+      },
+      {
+        "professor": "Professor Brian Edwards",
+        "subject": "Computer Science 101",
+        "stars": 4,
+        "review": "Professor Edwards is very knowledgeable, and his assignments are challenging but rewarding."
+      },
+      {
+        "professor": "Dr. Rachel King",
+        "subject": "Art History",
+        "stars": 5,
+        "review": "Dr. King is wonderful! Her passion for art is contagious, and her lectures are a joy to attend."
+      },
+      {
+        "professor": "Professor Eric Hall",
+        "subject": "Introduction to Philosophy",
+        "stars": 3,
+        "review": "Interesting material, but Professor Hall’s grading can be harsh. Be prepared to defend your arguments."
+      },
+      {
+        "professor": "Dr. Olivia Baker",
+        "subject": "Chemistry 101",
+        "stars": 4,
+        "review": "Dr. Baker is very approachable and helpful. The class is tough, but she does a great job explaining everything."
+      },
+      {
+        "professor": "Professor William Carter",
+        "subject": "English Composition",
+        "stars": 2,
+        "review": "Not my favorite class. Professor Carter’s feedback is vague, and the assignments feel a bit repetitive."
+      }
+    ]
+  }
+  
