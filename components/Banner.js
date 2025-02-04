@@ -39,7 +39,7 @@ export const Banner = () => {
             textAlign: { xs: "center", md: "left" },
           }}
         >
-          Rate My Professor
+          Athena
         </Typography>
 
         <Typography
@@ -50,8 +50,7 @@ export const Banner = () => {
             textAlign: { xs: "center", md: "left" },
           }}
         >
-          Your AI-powered assistant for personalized professor ratings and
-          reviews, retrieving insights
+          Here to help you study better✨
         </Typography>
 
 
@@ -70,22 +69,10 @@ export const Banner = () => {
               padding: { md: "15px 25px", xs: "10px 10px" },
             }}
           >
-            Find A Professor
+            Get Started
           </Button>
         </Link>
-           <Link href="/add_professor">
-          <Button
-            variant="contained"
-            sx={{
-              background: "#236AE7",
-              textTransform: "capitalize",
-              borderRadius: "12px",
-              padding: { md: "15px 25px", xs: "10px 10px" },
-            }}
-          >
-            Add A Professor
-          </Button>
-        </Link>
+          
 
         </Stack>
        

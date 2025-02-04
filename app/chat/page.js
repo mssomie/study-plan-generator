@@ -12,9 +12,10 @@ const ChatPage = () => {
     {
       role: "assistant",
       content:
-        "Hi, I'm the Rate My Professor Assistant, how can I help you today?",
+        "Hi, I'm Athena and I'm here to help you come up with an optimal study plan. What do you need?",
     },
   ]);
+  
 
   const sendMessage = async (e) => {
     e.preventDefault();

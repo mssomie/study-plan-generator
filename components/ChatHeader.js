@@ -32,7 +32,7 @@ export const ChatHeader = () => {
           </Link>
 
           <Typography variant="h4" fontWeight="600" color="white">
-            🤖 Prof Buddy
+            Athena✨
           </Typography>
         </Box>
       </Box>
