@@ -1,7 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { Box } from "@mui/material";
+import {
+  Box,
+  Grid,
+  Card,
+  CardHeader,
+  CardContent,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Typography,
+} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { ChatBody } from "@/components/ChatBody";
 import { ChatForm } from "@/components/ChatForm";
 import { ChatHeader } from "@/components/ChatHeader";
@@ -15,67 +27,51 @@ const ChatPage = () => {
         "Hi, I'm Athena and I'm here to help you come up with an optimal study plan. What do you need?",
     },
   ]);
-  
+
+  const [workflowResults, setWorkflowResults] = useState(null);
+  const [expandedCard, setExpandedCard] = useState(null); // tracks which card is expanded
 
   const sendMessage = async (e) => {
     e.preventDefault();
-    // Prevent sending empty messages
     if (!message.trim()) return;
 
     const userMessage = { role: "user", content: message };
-
     setMessage("");
 
-    setMessages((messages) => [
-      ...messages,
-      { role: "user", content: message },
-      { role: "assistant", content: "" },
-    ]);
+    setMessages((prevMessages) => [...prevMessages, userMessage]);
 
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          messages: [...messages, { role: "user", content: message }],
+          messages: [...messages, userMessage],
         }),
       });
 
-      // Read and decode the message gotten from the server-side
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
+      const data = await response.json();
+      setWorkflowResults(data);
 
-      let result = "";
-      reader.read().then(function processText({ done, value }) {
-        if (done) {
-          return result;
-        }
+      const assistantMessage = {
+        role: "assistant",
+        content: "Your study plan has been generated.",
+      };
 
-        const text = decoder.decode(value || new unit8Array(), {
-          stream: true,
-        });
-        result += text;
-
-        console.log("received text chunk:", text);
-        result += text;
-        setMessages((prevMessages) => {
-          const updatedMessages = [...prevMessages];
-          const lastMessage = updatedMessages[updatedMessages.length - 1];
-          if (!lastMessage.content.includes(text)) {
-            lastMessage.content += text;
-          }
-          return updatedMessages;
-        });
-
-        return reader.read().then(processText);
-      });
-
-      setMessage("");
+      setMessages((prevMessages) => [...prevMessages, assistantMessage]);
     } catch (error) {
       console.error("Error in sendMessage:", error);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { role: "assistant", content: "Sorry, an error occurred. Please try again!" },
+      ]);
     }
+  };
+
+  // Mapping for card titles
+  const cardTitles = {
+    zeroShot: "🎯 Zero-shot",
+    pddlPlanner: "📝 PDDL Planner",
+    promptEngineering: "🔍 Prompt Engineering",
   };
 
   return (
@@ -86,18 +82,71 @@ const ChatPage = () => {
         backgroundColor: "#0D2F6D",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "stretch",
         color: "#EDF6F9",
+        p: 2, // overall page margin
       }}
     >
       <ChatHeader />
-      <ChatBody messages={messages} />
-      <ChatForm
-        message={message}
-        setMessage={setMessage}
-        sendMessage={sendMessage}
-      />
+      <ChatBody messages={messages} sx={{ flex: 1, overflowY: "auto", mb: 2 }} />
+      <ChatForm message={message} setMessage={setMessage} sendMessage={sendMessage} />
+
+      {workflowResults && (
+        <Box
+          sx={{
+            mt: 2,
+            p: 2,
+            backgroundColor: "#EDF6F9",
+            color: "#0D2F6D",
+            borderRadius: 2,
+            maxHeight: "40vh",
+            overflowY: "auto",
+          }}
+        >
+          <Typography variant="h5" gutterBottom>
+            Generated Study Plan
+          </Typography>
+
+          <Grid container spacing={2}>
+            {Object.keys(cardTitles).map((key) => (
+              <Grid item xs={12} sm={4} key={key}>
+                <Card sx={{ height: "100%", borderRadius: "12px" }}>
+                  <CardHeader
+                    title={cardTitles[key]}
+                    action={
+                      <IconButton onClick={() => setExpandedCard(key)}>
+                        <ExpandMoreIcon />
+                      </IconButton>
+                    }
+                    sx={{ pb: 0 }}
+                  />
+                  <CardContent sx={{ maxHeight: 150, overflow: "hidden", p: 2 }}>
+                    <Typography variant="body2" sx={{ whiteSpace: "pre-line" }}>
+                      {workflowResults[key]}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+
+          {/* Modal for the expanded view */}
+          <Dialog
+            open={Boolean(expandedCard)}
+            onClose={() => setExpandedCard(null)}
+            fullWidth
+            maxWidth="md"
+          >
+            <DialogTitle>
+              {expandedCard ? cardTitles[expandedCard] : ""}
+            </DialogTitle>
+            <DialogContent dividers>
+              <Typography variant="body1" sx={{ whiteSpace: "pre-line" }}>
+                {expandedCard ? workflowResults[expandedCard] : ""}
+              </Typography>
+            </DialogContent>
+          </Dialog>
+        </Box>
+      )}
     </Box>
   );
 };
