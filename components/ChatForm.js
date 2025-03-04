@@ -43,7 +43,7 @@ export const ChatForm = ({ message, setMessage, sendMessage }) => {
             sx={{
               flex: 1,
               ".MuiOutlinedInput-notchedOutline": {
-                borderColor: "rgba(255,255,255,0.3)",
+                borderColor: "#5d7080",
                 borderRadius: "8px",
               },
             }}
@@ -57,7 +57,7 @@ export const ChatForm = ({ message, setMessage, sendMessage }) => {
             }}
             InputProps={{
               style: {
-                background: "#071536",
+                background: "#03111a",
               },
             }}
           />
@@ -69,7 +69,8 @@ export const ChatForm = ({ message, setMessage, sendMessage }) => {
           sx={{
             borderRadius: "12px",
             padding: { md: "15px 20px", xs: "10px 10px" },
-            background: "#6C95EF",
+            background: "#0cf7b2",
+            color: "black",
           }}
         >
           <Send />

@@ -36,7 +36,7 @@ export const ChatBody = ({ messages }) => {
           >
             <Avatar
               sx={{
-                backgroundColor: "#6C95EF",
+                // backgroundColor: "#6C95EF",
                 border: "2px solid pink",
                 order: message.role === "assistant" ? 0 : 2,
               }}
@@ -50,7 +50,7 @@ export const ChatBody = ({ messages }) => {
                 maxWidth: { md: "55%", xs: "80%" },
                 borderRadius: "12px",
                 padding: "12px",
-                backgroundColor: "#071536",
+                backgroundColor: "#203347",
                 listStylePosition: "inside", 
               }}
             >

@@ -6,7 +6,7 @@ export const ChatHeader = () => {
   return (
     <Box
       sx={{
-        backgroundColor: "#061737",
+        // backgroundColor: "#061737",
         display: "flex",
         padding: "20px",
       }}
