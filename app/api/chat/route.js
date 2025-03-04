@@ -248,7 +248,7 @@ function cleanupFiles(filePaths) {
 
 async function measureWorkflow(workflowFn, prompt){
   const startTime = Date.now();
-  let result, failure = false;
+  let result, failure = false, errorMessage = null;
 
   try{
     result = await workflowFn(prompt);
@@ -257,12 +257,13 @@ async function measureWorkflow(workflowFn, prompt){
     console.error('Workflow failed: ', error);
     result = null;
     failure = true;
+    errorMessage = error.message;
   }
 
   const endTime = Date.now();
   const timeTaken = endTime - startTime;
 
-  return {result, timeTaken, failure};
+  return {result, timeTaken, failure, errorMessage};
 }
 export async function POST(req) {
   let data;
@@ -310,13 +311,25 @@ export async function POST(req) {
         zeroShotFailure: zeroShot.failure,
         promptEngineeringFailure: promptEngineering.failure,
         pddlPlannerFailure: pddlPlanner.failure,
+        zeroShotError: zeroShot.errorMessage,
+        promptEngineeringError: promptEngineering.errorMessage,
+        pddlPlannerError: pddlPlanner.errorMessage,
         timestamp: serverTimestamp(),
         
       })
     return NextResponse.json({
-      zeroShot: zeroShot.result,
-      pddlPlanner: pddlPlanner.result,
-      promptEngineering: promptEngineering.result,
+      zeroShot: {
+        result: zeroShot.result,
+        error: zeroShot.failure ? zeroShot.errorMessage: null,
+      },
+      pddlPlanner: {
+        result: pddlPlanner.result,
+        error: pddlPlanner.failure ? pddlPlanner.errorMessage: null,
+      },
+      promptEngineering: {
+        result: promptEngineering.result,
+        error: promptEngineering.failure ? promptEngineering.errorMessage: null,
+      },
     });
   } catch (error) {
     console.error('Error handling request:', error);
