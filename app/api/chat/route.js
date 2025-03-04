@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import Groq from 'groq-sdk';
 import { isAsyncFunction } from 'util/types';
+import { db } from '@/app/lib/firebase';
+import { collection, addDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
+
 
 const groqClient = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
@@ -243,6 +246,24 @@ function cleanupFiles(filePaths) {
   });
 }
 
+async function measureWorkflow(workflowFn, prompt){
+  const startTime = Date.now();
+  let result, failure = false;
+
+  try{
+    result = await workflowFn(prompt);
+  }
+  catch (error){
+    console.error('Workflow failed: ', error);
+    result = null;
+    failure = true;
+  }
+
+  const endTime = Date.now();
+  const timeTaken = endTime - startTime;
+
+  return {result, timeTaken, failure};
+}
 export async function POST(req) {
   let data;
   try {
@@ -259,17 +280,43 @@ export async function POST(req) {
 
   try {
     // Run the different workflows in parallel
-    const [zeroShotResult, promptEngineeringResult, pddlPlannerResult] =
-      await Promise.all([
-        zeroShotWorkflow(userPrompt),
-        promptEngineeringWorkflow(userPrompt),
-        pddlPlannerWorkflow(userPrompt),
-      ]);
+    const [zeroShot, promptEngineering, pddlPlanner] =
+      // await Promise.all([
+      //   zeroShotWorkflow(userPrompt),
+      //   promptEngineeringWorkflow(userPrompt),
+      //   pddlPlannerWorkflow(userPrompt),
+      // ]);
 
+      await Promise.all([
+        measureWorkflow(zeroShotWorkflow, userPrompt),
+        measureWorkflow(promptEngineeringWorkflow, userPrompt),
+        measureWorkflow(pddlPlannerWorkflow, userPrompt),
+
+      ])
+      // Save to Firestore
+      const promptRef = await addDoc(collection(db, 'prompts'), {
+        prompt: userPrompt,
+        zeroShotResponse: zeroShot.result,
+        promptEngineeringResponse: promptEngineering.result,
+        pddlPlannerResponse: pddlPlanner.result,
+        timestamp: serverTimestamp(),
+      });
+
+      await addDoc(collection(db, 'performance'), {
+        promptId: promptRef.id,
+        zeroShotTime: zeroShot.timeTaken,
+        promptEngineeringTime: promptEngineering.timeTaken,
+        pddlPlannerTime: pddlPlanner.timeTaken,
+        zeroShotFailure: zeroShot.failure,
+        promptEngineeringFailure: promptEngineering.failure,
+        pddlPlannerFailure: pddlPlanner.failure,
+        timestamp: serverTimestamp(),
+        
+      })
     return NextResponse.json({
-      zeroShot: zeroShotResult,
-      pddlPlanner: pddlPlannerResult,
-      promptEngineering: promptEngineeringResult,
+      zeroShot: zeroShot.result,
+      pddlPlanner: pddlPlanner.result,
+      promptEngineering: promptEngineering.result,
     });
   } catch (error) {
     console.error('Error handling request:', error);
