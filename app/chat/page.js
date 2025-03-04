@@ -30,7 +30,9 @@ const ChatPage = () => {
     {
       role: "assistant",
       content:
-        "Hi, I'm Athena and I'm here to help you come up with an optimal study plan. What do you need?",
+      "Hi, I'm Athena! I'm here to craft the perfect study plan for you. Just tell me what you're studying, and if you’d like, share any details—like topics, your comfort level, or how much time you have. Let’s make a plan that works for you!"
+
+
     },
   ]);
 
@@ -75,9 +77,9 @@ const ChatPage = () => {
 
   // Mapping for card titles
   const cardTitles = {
-    zeroShot: "🎯 Zero-shot",
-    pddlPlanner: "📝 PDDL Planner",
-    promptEngineering: "🔍 Prompt Engineering",
+    zeroShot: " 🎠 Troy",
+    pddlPlanner: "🔱 Ithica",
+    promptEngineering: "🌿 Myrmidon",
   };
 
   return (

@@ -32,25 +32,20 @@ export const ChatBody = ({ messages }) => {
               gap: "8px",
               justifyContent:
                 message.role === "assistant" ? "flex-start" : "flex-end",
+              
             }}
           >
-            <Avatar
-              sx={{
-                // backgroundColor: "#6C95EF",
-                border: "2px solid pink",
-                order: message.role === "assistant" ? 0 : 2,
-              }}
-            >
-              {message.role === "assistant" ? <Bot /> : <User />}
-            </Avatar>
-
+           
             <Box
               sx={{
                 minWidth: "7%",
                 maxWidth: { md: "55%", xs: "80%" },
                 borderRadius: "12px",
                 padding: "12px",
-                backgroundColor: "#203347",
+                backgroundColor:
+                  message.role === "assistant" ? "#203347" : "#0cf7b2",
+                color:
+                message.role === "assistant" ? "white" : "black",
                 listStylePosition: "inside", 
               }}
             >
