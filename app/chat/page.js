@@ -37,7 +37,27 @@ const ChatPage = () => {
   ]);
 
   const [workflowResults, setWorkflowResults] = useState(null);
-  const [expandedCard, setExpandedCard] = useState(null); // tracks which card is expanded
+  const [expandedCard, setExpandedCard] = useState(null);
+
+  // Maintain separate histories for each workflow
+  const [zeroShotHistory, setZeroShotHistory] = useState([
+    {
+      role: "assistant",
+      content: "Initial system message",
+    }
+  ]);
+  const [promptEngineeringHistory, setPromptEngineeringHistory] = useState([
+    {
+      role: "assistant",
+      content: "Initial system message",
+    }
+  ]);
+  const [pddlPlannerHistory, setPddlPlannerHistory] = useState([ {
+    role: "assistant",
+    content: "Initial system message",
+  }]);
+
+
 
   const sendMessage = async (e) => {
     e.preventDefault();
@@ -47,13 +67,20 @@ const ChatPage = () => {
     setMessage("");
   
     setMessages((prevMessages) => [...prevMessages, userMessage]);
+
+    //Add user's message to each workflow's history
+    setZeroShotHistory((prev)=>[...prev, userMessage]);
+    setPromptEngineeringHistory((prev)=>[...prev, userMessage]);
+    setPddlPlannerHistory((prev)=>[...prev, userMessage]);
   
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          messages: [...messages, userMessage],
+          zeroShotHistory: [...zeroShotHistory, userMessage],
+          promptEngineeringHistory: [...promptEngineeringHistory, userMessage],
+          pddlPlannerHistory: [...pddlPlannerHistory, userMessage],
         }),
       });
   
@@ -66,12 +93,24 @@ const ChatPage = () => {
       };
   
       setMessages((prevMessages) => [...prevMessages, assistantMessage]);
-    } catch (error) {
-      console.error("Error in sendMessage:", error);
+
+      // Add assistant message to each of the workflow's history
+      setZeroShotHistory((prev)=> [...prev, assistantMessage]);
+      setPromptEngineeringHistory((prev)=>[...prev, assistantMessage]);
+      setPddlPlannerHistory((prev)=>[...prev, assistantMessage]);
+
+    } catch (errorMessage) {
+      console.error("Error in sendMessage:", errorMessage);
       setMessages((prevMessages) => [
         ...prevMessages,
         { role: "assistant", content: "Sorry, an error occurred. Please try again!" },
       ]);
+
+      const errorMessageObj ={role: "error", content: errorMessage}
+      setMessages((prevMessages) => [...prevMessages, errorMessageObj]);
+      setZeroShotHistory((prev)=>[...prev, errorMessageObj]);;
+      setPromptEngineeringHistory((prev)=>[...prev, errorMessageObj]);
+      setPddlPlannerHistory((prev)=>[...prev, errorMessageObj]);
     }
   };
 

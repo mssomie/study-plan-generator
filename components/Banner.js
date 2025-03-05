@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import athena from '/Users/queenmother/Documents/Workspace/study-plan-generator/public/athena.png'
 import {
   Typography,
   Box,
@@ -79,13 +80,14 @@ export const Banner = () => {
       </Box>
 
       {/* Image */}
-      <Box>
+      <Box sx={{paddingTop: "300px"}}>
         {isMediumScreen && (
           <Image
-            src="/banner.svg"
+            src={athena}
             alt=""
-            width={isMediumScreen ? "550" : null}
-            height={350}
+            
+            // width={isMediumScreen ? "550" : null}
+            // height={350}
           />
         )}
       </Box>
