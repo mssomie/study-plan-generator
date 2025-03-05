@@ -4,7 +4,7 @@ import { isAsyncFunction } from 'util/types';
 import { db } from '@/app/lib/firebase';
 import { collection, addDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
 
-
+let domainPDDL, problemPDDL;
 const groqClient = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 const promptEngineeringPrompt = `Hey Athena, below is summarized, some research on effective study strategies.
@@ -151,9 +151,10 @@ async function generatePDDL(userPrompt) {
 
   // Extract domain and problem PDDL from the response
   const fullResponse = response.choices[0].message.content;
-  const domainPDDL = fullResponse.split('### Domain PDDL')[1].split('### Problem PDDL')[0].trim();
-  const problemPDDL = fullResponse.split('### Problem PDDL')[1].trim();
+  domainPDDL = fullResponse.split('### Domain PDDL')[1].split('### Problem PDDL')[0].trim();
+  problemPDDL = fullResponse.split('### Problem PDDL')[1].trim();
 
+  
   return { domainPDDL, problemPDDL };
 }
 
@@ -316,7 +317,17 @@ export async function POST(req) {
         pddlPlannerError: pddlPlanner.errorMessage,
         timestamp: serverTimestamp(),
         
-      })
+      })  
+
+      // Save generated PDDLs into firebase
+
+    await addDoc(collection(db, 'pddls'), {
+      promptId: promptRef.id,
+      domainPddl: domainPDDL,
+      problemPddl: problemPDDL,
+    })
+
+    
     return NextResponse.json({
       zeroShot: {
         result: zeroShot.result,
