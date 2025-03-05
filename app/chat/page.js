@@ -22,6 +22,7 @@ import { ChatForm } from "@/components/ChatForm";
 import  CustomCard  from "@/components/CustomCard";
 import { ChatHeader } from "@/components/ChatHeader";
 import theme from "../theme";
+import ReactMarkdown from "react-markdown";
 
 
 const ChatPage = () => {
@@ -187,7 +188,7 @@ const ChatPage = () => {
                                     </Typography>
                                   ) : (
                                     <Typography variant="body2" sx={{ whiteSpace: "pre-line" }}>
-                                      {workflowResults[key].result}
+                                      <ReactMarkdown>{workflowResults[key].result}</ReactMarkdown>
                                     </Typography>
                                   )}
                                 </CardContent>
@@ -212,11 +213,11 @@ const ChatPage = () => {
                           <DialogContent dividers sx={{ backgroundColor: "#03111a" }}>
                             {workflowResults[expandedCard]?.error ? (
                               <Typography variant="body1" color="error">
-                                Error: {workflowResults[expandedCard].error}
+                                <ReactMarkdown>Error: {workflowResults[expandedCard].error}</ReactMarkdown>
                               </Typography>
                             ) : (
                               <Typography variant="body1" sx={{ whiteSpace: "pre-line" }}>
-                                {workflowResults[expandedCard]?.result}
+                                <ReactMarkdown>{workflowResults[expandedCard]?.result}</ReactMarkdown>
                               </Typography>
                             )}
                           </DialogContent>
