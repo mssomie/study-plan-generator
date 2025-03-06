@@ -16,7 +16,7 @@ import {
   Typography,
   ThemeProvider
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 import { ChatBody } from "@/components/ChatBody";
 import { ChatForm } from "@/components/ChatForm";
 import  CustomCard  from "@/components/CustomCard";
@@ -175,8 +175,8 @@ const ChatPage = () => {
                                 <CardHeader
                                   title={cardTitles[key]}
                                   action={
-                                    <IconButton onClick={() => setExpandedCard(key)}>
-                                      <ExpandMoreIcon />
+                                    <IconButton size ="small" sx={{color: "#fff4b6"}} onClick={() => setExpandedCard(key)}>
+                                      <OpenInFullIcon />
                                     </IconButton>
                                   }
                                   sx={{ pb: 0 }}

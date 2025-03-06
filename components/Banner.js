@@ -1,7 +1,6 @@
 "use client";
 
-import Image from "next/image";
-import athena from '/Users/queenmother/Documents/Workspace/study-plan-generator/public/athena.png'
+
 import {
   Typography,
   Box,
@@ -18,26 +17,29 @@ export const Banner = () => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <Box
+   
+       <Box
       sx={{
         height: "100vh",
         width: "100%",
         color: "white",
-        background: "#041025",
-        // padding: "10px",
+        backgroundImage: "url('/athena.png')",
+        backgroundSize: "cover",
         display: "flex",
         alignItems: "center",
-        justifyContent: "space-evenly",
+        // justifyContent: "space-evenly",
         overflow: "hidden",
       }}
     >
-      <Box sx={{ paddingX: { xs: "50px" } }}>
+      <Box sx={{ paddingX: { xs: "50px" } ,  paddingLeft: {xs:"20px", md:"250px"}}}>
         <Typography
-          variant={isSmallScreen ? "h5" : "h2"}
+          // variant={isSmallScreen ? "h5" : "h2"}
+          variant="h1"
           fontWeight="900"
           gutterBottom
           sx={{
             textAlign: { xs: "center", md: "left" },
+           
           }}
         >
           Athena
@@ -64,7 +66,9 @@ export const Banner = () => {
           <Button
             variant="contained"
             sx={{
-              background: "#236AE7",
+              background: "#0cf7b2",
+              color:"black",
+              fontWeight: "bold",
               textTransform: "capitalize",
               borderRadius: "12px",
               padding: { md: "15px 25px", xs: "10px 10px" },
@@ -80,7 +84,7 @@ export const Banner = () => {
       </Box>
 
       {/* Image */}
-      <Box sx={{paddingTop: "300px"}}>
+      {/* <Box sx={{paddingTop: "300px"}}>
         {isMediumScreen && (
           <Image
             src={athena}
@@ -90,7 +94,10 @@ export const Banner = () => {
             // height={350}
           />
         )}
-      </Box>
+      </Box> */}
     </Box>
+
+  
+   
   );
 };
