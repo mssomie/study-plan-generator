@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import {Box} from "@mui/material";
 import { useSearchParams } from 'next/navigation';
 import {useEffect, useState} from 'react';
@@ -49,7 +50,8 @@ const FormPage = () => {
   };
 
   return (
-    <Box sx={{
+    <Suspense fallback={<div>Loading form...</div>}>
+      <Box sx={{
       width: '100vw',
       height: '100vh',
       overflow: 'hidden',
@@ -69,6 +71,9 @@ const FormPage = () => {
         allowFullScreen
       />
     </Box>
+
+    </Suspense>
+    
   );
 };
 
