@@ -10,11 +10,28 @@ import {
   Stack
 } from "@mui/material";
 import Link from "next/link";
+import {useRouter } from "next/navigation"
+import {auth} from '@/app/lib/firebase';
+import { signInAnonymously } from "firebase/auth";
 
 export const Banner = () => {
   const theme = useTheme();
+  const router = useRouter();
   const isMediumScreen = useMediaQuery("(min-width:960px)");
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const handleGetStarted = async () =>{
+    try{
+      // anonymous sign in flow
+      const userCredential = await signInAnonymously(auth); 
+      console.log("Anonymous user ID: ", userCredential.user.uid);
+
+      // redirect to consent form
+      router.push(`/form?uid=${userCredential.user.uid}`);
+    }catch{
+      console.error("Anonymous sign-in failed: ", error);
+    }
+  }
 
   return (
    
@@ -77,6 +94,27 @@ export const Banner = () => {
             Get Started
           </Button>
         </Link>
+          
+
+        </Stack>
+        <Stack 
+        spacing={2}
+        direction="row">
+          <Button
+            onClick = {handleGetStarted}
+            variant="contained"
+            sx={{
+              background: "#0cf7b2",
+              color:"black",
+              fontWeight: "bold",
+              textTransform: "capitalize",
+              borderRadius: "12px",
+              padding: { md: "15px 25px", xs: "10px 10px" },
+            }}
+          >
+            Form
+          </Button>
+     
           
 
         </Stack>

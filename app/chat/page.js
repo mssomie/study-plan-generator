@@ -23,9 +23,38 @@ import  CustomCard  from "@/components/CustomCard";
 import { ChatHeader } from "@/components/ChatHeader";
 import theme from "../theme";
 import ReactMarkdown from "react-markdown";
+import {auth} from '@/app/lib/firebase';
+import {doc, getDoc} from 'firebase/firestore';
+import { db } from '@/app/lib/firebase';
+import {useEffect} from 'react';
 
 
 const ChatPage = () => {
+  // Access verification
+  useEffect(()=> {
+    const verifyAccess = async () => {
+      const user = auth.currentUser
+      
+      if(!user || user.isAnonymous === false){
+        window.location = '/'
+        return
+      }
+
+      const docSnap = await getDoc(doc(db, 'users', user.uid))
+
+      if(!docSnap.exists() || !docSnap.data().formSubmitted){
+        window.location = 'form?uid=' + user.uid
+        console.log('authenticated')
+      }
+    }
+
+    verifyAccess()
+  })
+
+
+
+
+// Chat Management
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([
     {

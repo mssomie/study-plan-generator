@@ -1,5 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import { getAuth, signInAnonymously } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from 'firebase/firestore';
 // TODO: Add SDKs for Firebase products that you want to use
@@ -20,5 +21,15 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app)
 
-export {db}
+export {db, auth}
+
+// Enable auto-logiun on app load
+signInAnonymously(auth)
+.then(userCredential => {
+    console.log("Guest UID: ", userCredential.user.uid);
+
+}).catch(error => {
+    console.error("Anonymous auth failed: ", error);
+})
