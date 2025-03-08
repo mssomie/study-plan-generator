@@ -1,16 +1,18 @@
 "use client";
 
-import { Suspense } from "react";
 import {Box} from "@mui/material";
 import { useSearchParams } from 'next/navigation';
-import {useEffect, useState} from 'react';
+import {Suspense, useEffect, useState} from 'react';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from '@/app/lib/firebase';
+
+export const dynamic = 'force-dynamic';
 
 function FormContent(){
   const searchParams = useSearchParams();
   const uid = searchParams.get('uid');
   const [formUrl, setFormUrl ] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   // Set up form URL with UID
   useEffect(() => {
@@ -19,6 +21,7 @@ function FormContent(){
       const formId = 'id=8l9CbGVo30Kk245q9jSBPR8ttOl3SfNAgFqJZw9Uxd1UOVRKUEJPNk00SjczSk5RR0NVTjlIS04zWC4u';
       const formUrl = `${baseUrl}?${formId}&embed=true&userId=${uid}`;
       setFormUrl(formUrl)
+      setIsLoading(false)
     }
   }, [uid])
 
@@ -47,6 +50,10 @@ function FormContent(){
       console.error('Firestore update failed: ', error);
     }
   };
+
+  if (isLoading){
+    return <div>Loading... </div>
+  }
 
   return (
       <Box sx={{
