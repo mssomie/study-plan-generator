@@ -1,9 +1,9 @@
 "use client";
 
-import {Box} from "@mui/material";
+import {Box, CircularProgress} from "@mui/material";
 import { useSearchParams } from 'next/navigation';
 import {Suspense, useEffect, useState} from 'react';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '@/app/lib/firebase';
 
 export const dynamic = 'force-dynamic';
@@ -12,7 +12,6 @@ function FormContent(){
   const searchParams = useSearchParams();
   const uid = searchParams.get('uid');
   const [formUrl, setFormUrl ] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
 
   // Set up form URL with UID
   useEffect(() => {
@@ -21,38 +20,39 @@ function FormContent(){
       const formId = 'id=8l9CbGVo30Kk245q9jSBPR8ttOl3SfNAgFqJZw9Uxd1UOVRKUEJPNk00SjczSk5RR0NVTjlIS04zWC4u';
       const formUrl = `${baseUrl}?${formId}&embed=true&userId=${uid}`;
       setFormUrl(formUrl)
-      setIsLoading(false)
     }
   }, [uid])
 
   // Detect form submission
   useEffect(() => {
-    const handleMessage = (event) => {
-      if (event.data.type === "form-submitted"){
-        handleFormCompletion();
+    if (!uid) return;
 
+    const unsubscribe = onSnapshot(doc(db, 'sessions', uid), (doc)=>{
+      if (doc.exists() && doc.data().submitted){
+        setFormSubmitted(true);
+        window.location.href="/chat"
       }
-    };
 
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, [uid]);
+    });
 
-  const handleFormCompletion = async () =>{
-    try{
-      await setDoc(doc(db, 'users', uid), {
-        formSubmitted: true,
-        submittedAt: new Date()
-      });
-      window.location.href= '/chat';
-    }
-    catch(error){
-      console.error('Firestore update failed: ', error);
-    }
-  };
+    return ()=> unsubscribe();
 
-  if (isLoading){
-    return <div>Loading... </div>
+      
+    }, [uid]);
+
+
+  if (!formUrl){
+    return (
+      <Box sx ={{
+        display: 'flex', 
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh'
+      }}>
+        <CircularProgress/>
+
+      </Box>
+    );
   }
 
   return (
