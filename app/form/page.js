@@ -7,8 +7,7 @@ import {useEffect, useState} from 'react';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from '@/app/lib/firebase';
 
-const FormPage = () => {
-  
+function FormContent(){
   const searchParams = useSearchParams();
   const uid = searchParams.get('uid');
   const [formUrl, setFormUrl ] = useState('');
@@ -50,7 +49,6 @@ const FormPage = () => {
   };
 
   return (
-    <Suspense fallback={<div>Loading form...</div>}>
       <Box sx={{
       width: '100vw',
       height: '100vh',
@@ -72,9 +70,22 @@ const FormPage = () => {
       />
     </Box>
 
-    </Suspense>
+
     
   );
 };
+
+
+
+const FormPage = () => {
+  return(
+    <Suspense fallback={<div>Loading form...</div>}>
+      <FormContent/>
+
+    </Suspense>
+  )
+  
+}
+
 
 export default FormPage;
