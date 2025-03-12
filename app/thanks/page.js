@@ -32,15 +32,15 @@ import {useEffect} from 'react';
 
 const ChatPage = () => {
   
-  const [globalUser, setGlobalUser] = useState(null);
+  let globalUser
   // Access verification
   useEffect(()=> {
     const verifyAccess = async () => {
       try{
         await auth.authStateReady();
         const user = auth.currentUser;
-        setGlobalUser(user);
-        console.log(`user: ${user}, globalUser: ${ globalUser} `)
+        globalUser = user;
+        console.log(`user: ${user} `)
   
         
         if(!user){
@@ -64,7 +64,7 @@ const ChatPage = () => {
      
     }
 
-    verifyAccess()
+    // verifyAccess()
   }, []);
 
 
@@ -168,15 +168,9 @@ const ChatPage = () => {
   };
 
   const goToSurvey = async () =>{
-    if (!globalUser){
-      console.log("No user found... redirecting to home page");
-      window.location.href="/";
-      return
-    }
       console.log('Button clicked')
       // redirect to survey form
-      const uid = encodeURIComponent(globalUser.uid)
-      window.location.href = `/survey?uid=${uid}`;
+      window.location.href = `/survey?uid=${globalUser.uid}`;
   }
 
   return (
@@ -195,96 +189,12 @@ const ChatPage = () => {
           flex: 1, // Allow the container to grow and fill the available space
           padding: 2,
         }}>
+          <Typography variant="h3">
+            Thank you!
+
+          </Typography>
           <Grid container spacing ={3} style ={{marginTop: '20px'}}>
-          <Grid item xs = {12} md ={3}>
-                <CustomCard sx={{ 
-                  minHeight: '100vh',
-                  maxHeight: '100vh',
-                  backgroundColor: "#071b33",
-
-                  overflow: 'scroll'}}>
-                  <CardContent>
-                    <Box p={1}>
-                      <Typography variant="h2" textAlign={"center"}>
-                        Study Plans✨
-                      </Typography>
-                      <Typography variant="body2" textAlign={"center"}>
-                      Generate recipes with our talented chef AI
-                      </Typography>
-                     
-                  
-                    </Box>
-
-                    {workflowResults && (
-                      <CustomCard
-                        sx={{
-                          mt: 2,
-                          p: 2,
-                          borderRadius: 2,
-                          maxHeight: "100vh",
-                          overflowY: "auto",
-                        }}
-                      >
-                        <Grid container spacing={2}>
-                          {Object.keys(cardTitles).map((key) => (
-                            <Grid item xs={12} sm={12} key={key}>
-                              <CustomCard sx={{ height: "100%", borderRadius: "12px", backgroundColor: "#03111a", borderColor: "#fff4b6" }}>
-                                <CardHeader
-                                  title={cardTitles[key]}
-                                  action={
-                                    <IconButton size ="small" sx={{color: "#fff4b6"}} onClick={() => setExpandedCard(key)}>
-                                      <OpenInFullIcon />
-                                    </IconButton>
-                                  }
-                                  sx={{ pb: 0 }}
-                                />
-                                <CardContent sx={{ maxHeight: 150, overflow: "hidden", p: 2 }}>
-                                  {workflowResults[key].error ? (
-                                    <Typography variant="body2" color="error">
-                                      Error: {workflowResults[key].error}
-                                    </Typography>
-                                  ) : (
-                                    <Typography variant="body2" sx={{ whiteSpace: "pre-line" }}>
-                                      <ReactMarkdown>{workflowResults[key].result}</ReactMarkdown>
-                                    </Typography>
-                                  )}
-                                </CardContent>
-                              </CustomCard>
-                            </Grid>
-                          ))}
-                        </Grid>
-
-                        {/* Modal for the expanded view */}
-                        <Dialog
-                          open={Boolean(expandedCard)}
-                          onClose={() => setExpandedCard(null)}
-                          fullWidth
-                          maxWidth="md"
-                          sx={{
-                            backgroundColor: "#03111a",
-                          }}
-                        >
-                          <DialogTitle sx={{ backgroundColor: "#03111a" }}>
-                            {expandedCard ? cardTitles[expandedCard] : ""}
-                          </DialogTitle>
-                          <DialogContent dividers sx={{ backgroundColor: "#03111a" }}>
-                            {workflowResults[expandedCard]?.error ? (
-                              <Typography variant="body1" color="error">
-                                <ReactMarkdown>Error: {workflowResults[expandedCard].error}</ReactMarkdown>
-                              </Typography>
-                            ) : (
-                              <Typography variant="body1" sx={{ whiteSpace: "pre-line" }}>
-                                <ReactMarkdown>{workflowResults[expandedCard]?.result}</ReactMarkdown>
-                              </Typography>
-                            )}
-                          </DialogContent>
-                        </Dialog>
-                      </CustomCard>
-                    )}
-                            
-                  </CardContent>
-                </CustomCard>
-              </Grid>
+       
               <Grid item xs = {12} md ={9}>
               <CustomCard
                 sx={{

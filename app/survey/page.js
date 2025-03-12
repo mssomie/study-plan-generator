@@ -13,13 +13,14 @@ function FormContent(){
   const uid = searchParams.get('uid');
   const [formUrl, setFormUrl ] = useState('');
 
-  
+
   // Set up form URL with UID
   useEffect(() => {
     if (uid) {
+      console.log(uid)
       const baseUrl = 'https://forms.office.com/Pages/ResponsePage.aspx';
-      const formId = 'id=8l9CbGVo30Kk245q9jSBPR8ttOl3SfNAgFqJZw9Uxd1UOVRKUEJPNk00SjczSk5RR0NVTjlIS04zWC4u';
-      const questionId = 'rdc95bcffc45e450d86d6fcbfd4e2a965'; 
+      const formId = 'id=8l9CbGVo30Kk245q9jSBPR8ttOl3SfNAgFqJZw9Uxd1UMVNMUkdIRVlRNlpFU0NET1pQOTNDSk43NS4u';
+      const questionId = 'r9aebb45895824c64840335398b2b0f9b'; 
       const formUrl = `${baseUrl}?${formId}&${questionId}=${encodeURIComponent(uid)}&embed=true`;
       setFormUrl(formUrl);
     }
@@ -27,25 +28,22 @@ function FormContent(){
 
   // Detect form submission
   useEffect(() => {
+    console.log(1)
     if (!uid) return;
+    console.log(2)
 
-    const sessionRef = doc(db, 'sessions', uid);
+    const userRef = doc(db, 'users', uid);
 
-    setDoc(sessionRef, {submitted: false}, {merge: true}).then(()=>{
-      const unsubscribe = onSnapshot(doc(db, 'sessions', uid), (docSnap)=>{
-        if (docSnap.exists() && docSnap.data().submitted){
-          setDoc(doc(db, 'users', uid), {
-            formSubmitted: true,
-            createdAt: new Date()
-          }).then(()=>{
-            window.location.href= "/chat";
-          })
-        }
-      });    
+    setDoc(userRef, {surveySubmitted: false}, {merge: true}).then(()=>{
+      const unsubscribe = onSnapshot(userRef, (docSnap)=>{
+        if (docSnap.exists() && docSnap.data().surveySubmitted){
+          window.location.href= "/thanks";
+          }
+        });    
   
       return ()=> unsubscribe();
   
-    }).catch((error)=> console.error("Session setup fail "))
+    }).catch((error)=> console.error("Session setup fail ", error))
 
     
       
@@ -95,7 +93,7 @@ function FormContent(){
 
 
 
-const FormPage = () => {
+const SurveyPage = () => {
   return(
     <Suspense fallback={<div>Loading form...</div>}>
       <FormContent/>
@@ -106,4 +104,4 @@ const FormPage = () => {
 }
 
 
-export default FormPage;
+export default SurveyPage;

@@ -7,12 +7,15 @@ import {
   useMediaQuery,
   useTheme,
   Button,
-  Stack
+  Stack,
 } from "@mui/material";
 import Link from "next/link";
 import {useRouter } from "next/navigation"
 import {auth} from '@/app/lib/firebase';
 import { signInAnonymously } from "firebase/auth";
+import { setDoc, doc } from "firebase/firestore";
+import { db } from '@/app/lib/firebase';
+
 
 export const Banner = () => {
   const theme = useTheme();
@@ -22,14 +25,26 @@ export const Banner = () => {
 
   const handleGetStarted = async () =>{
     try{
+      console.log('got here')
       // anonymous sign in flow
       const userCredential = await signInAnonymously(auth); 
+      const user = userCredential.user;
       console.log("Anonymous user ID: ", userCredential.user.uid);
 
+      // Initialize session
+      await setDoc(doc(db, 'sessions', user.uid), {
+        created: new Date(),
+        submitted: false,
+        active: true
+      })
+      
+
       // redirect to consent form
-      router.push(`/form?uid=${userCredential.user.uid}`);
-    }catch{
+      window.location.href = `/form?uid=${user.uid}`;
+      
+    }catch(error){
       console.error("Anonymous sign-in failed: ", error);
+      alert('sign in failed: ', error.message);
     }
   }
 
@@ -48,8 +63,8 @@ export const Banner = () => {
         overflow: "hidden",
       }}
     >
-      <Box sx={{ paddingX: { xs: "50px" } ,  paddingLeft: {xs:"20px", md:"250px"}}}>
-        <Typography
+      <Box sx={{ paddingTop:"85vh", paddingX: { xs: "50px" } ,  paddingLeft: {xs:"20px", md:"250px"}}}>
+        {/* <Typography
           // variant={isSmallScreen ? "h5" : "h2"}
           variant="h1"
           fontWeight="900"
@@ -71,12 +86,12 @@ export const Banner = () => {
           }}
         >
           Here to help you study better✨
-        </Typography>
+        </Typography> */}
 
 
        
 
-        <Stack 
+        {/* <Stack 
         spacing={2}
         direction="row">
            <Link href="/chat">
@@ -96,7 +111,7 @@ export const Banner = () => {
         </Link>
           
 
-        </Stack>
+        </Stack> */}
         <Stack 
         spacing={2}
         direction="row">

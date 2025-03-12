@@ -2,6 +2,7 @@ import { Bot, User } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { Avatar, Box } from "@mui/material";
 
+
 export const ChatBody = ({ messages }) => {
   return (
     <Box
