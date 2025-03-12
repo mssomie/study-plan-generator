@@ -135,7 +135,6 @@ export const Banner = () => {
         </Stack>
        
       </Box>
-      <Typography>Same</Typography>
 
       {/* Image */}
       {/* <Box sx={{paddingTop: "300px"}}>
