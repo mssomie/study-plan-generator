@@ -28,27 +28,25 @@ function FormContent(){
 
   // Detect form submission
   useEffect(() => {
-    console.log(1)
     if (!uid) return;
-    console.log(2)
 
-    const userRef = doc(db, 'users', uid);
-
-    setDoc(userRef, {surveySubmitted: false}, {merge: true}).then(()=>{
-      const unsubscribe = onSnapshot(userRef, (docSnap)=>{
-        if (docSnap.exists() && docSnap.data().surveySubmitted){
-          window.location.href= "/thanks";
-          }
-        });    
+    const unsubscribe = onSnapshot(doc(db, 'users', uid), (docSnap)=>{
+      if (docSnap.exists() && docSnap.data().surveySubmitted){
+        window.location.href="/thanks";
+      }
+    })
   
-      return ()=> unsubscribe();
+    return ()=> unsubscribe();
   
-    }).catch((error)=> console.error("Session setup fail ", error))
-
-    
-      
     }, [uid]);
 
+    if (!formUrl) {
+      return (
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+          <CircularProgress />
+        </Box>
+      );
+    }
 
   if (!formUrl){
     return (

@@ -168,15 +168,36 @@ const ChatPage = () => {
   };
 
   const goToSurvey = async () =>{
-    if (!globalUser){
-      console.log("No user found... redirecting to home page");
-      window.location.href="/";
-      return
+    try{
+      if (!globalUser){
+        console.log("No user found... redirecting to home page");
+        window.location.href="/";
+        return
+      }
+  
+      const uid = encodeURIComponent(globalUser.uid);
+    
+    // Call Cloud Function
+    // const response = await fetch('https://us-central1-athena-8749c.cloudfunctions.net/handleSurveySubmit', {
+    //   method: 'POST',
+    //   headers: {'Content-Type': 'application/json'},
+    //   body: JSON.stringify({ uid: globalUser.uid })
+    // });
+
+    // if (!response.ok) throw new Error('Survey setup failed');
+    
+    // Redirect after successful call
+    window.location.href = `/survey?uid=${uid}`;
+
+      
+    }catch(error){
+      console.error('Survey error', error);
+      setMessages(prev=> [...prev, {
+        role:"error",
+        content: "Failed to start survey. Please try again"
+      }])
     }
-      console.log('Button clicked')
-      // redirect to survey form
-      const uid = encodeURIComponent(globalUser.uid)
-      window.location.href = `/survey?uid=${uid}`;
+   
   }
 
   return (

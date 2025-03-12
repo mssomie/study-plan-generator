@@ -1,5 +1,6 @@
 const { onRequest } = require('firebase-functions/v2/https');
 const { setGlobalOptions } = require('firebase-functions/v2');
+const functions = require('firebase-functions')
 const admin = require('firebase-admin');
 
 setGlobalOptions({ maxInstances: 10 });
@@ -30,3 +31,44 @@ exports.handleFormSubmit = onRequest(async (req, res) => {
       return res.status(500).send('Internal Server Error');
     }
 });
+
+exports.handleSurveySubmit = functions.https.onRequest(async (req, res)=>{
+      
+    res.set('Access-Control-Allow-Origin', '*');
+    res.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.set('Access-Control-Allow-Headers', 'Content-Type');
+
+    if (req.method === 'OPTIONS'){
+        res.status(204).send('');
+        return;
+    }
+
+    try{
+         const {uid }= req.body;
+
+         if (!uid){
+            throw new Error ('Missing UID parameter')
+
+         }
+
+         console.log(`Received survey request for UID: ${uid}`)
+
+         const surveyRef = admin.firestore().collection('surveys').doc(uid);
+         await surveyRef.set({
+            uid,
+            timestamp: admin.firestore.FieldValue.serverTimestamp()
+         });
+
+         res.status(200).json({ 
+            success: true,
+            redirectUrl: `/survey?uid=${encodeURIComponent(uid)}`
+          });
+      
+        } catch (error) {
+          console.error('Error in handleSurveySubmit:', error);
+          res.status(500).json({
+            success: false,
+            error: error.message
+          });
+        }
+      });
