@@ -129,6 +129,10 @@ const ChatPage = () => {
           pddlPlannerHistory: [...pddlPlannerHistory, userMessage],
         }),
       });
+      if (!response.ok){
+        const errorData = await response.text();
+        throw new Error(`API Error ${response.status} : ${errorData}`)
+      }
   
       const data = await response.json();
       setWorkflowResults(data);
