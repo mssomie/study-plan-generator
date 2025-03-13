@@ -5,7 +5,7 @@ import { db } from '@/app/lib/firebase';
 import { collection, addDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
 
 
-const groqClient = new Groq({ apiKey: process.env.GROQ_API_KEY });
+const groqClient = new Groq({ apiKey: process.env.ATHENAGROQ_API_KEY });
 
 const promptEngineeringPrompt = `Hey Athena, below is summarized, some research on effective study strategies.
 
