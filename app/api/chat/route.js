@@ -232,8 +232,8 @@ const path = require('path');
 
 function savePDDLToFile(content, fileName) {
   // Path to tmp
-  const tmpDir = path.join(process.cwd(), 'tmp');
-
+  // const tmpDir = path.join(process.cwd(), 'tmp');
+  const tmpDir = '/tmp/pddl-workflow'
   // Create path if it does not exist
   if (!fs.existsSync(tmpDir)) {
     fs.mkdirSync(tmpDir, { recursive: true });
@@ -248,37 +248,89 @@ function savePDDLToFile(content, fileName) {
 // Pass PDDL to Fast Downward
 const { exec } = require('child_process');
 
-function runFastDownward(domainFile, problemFile) {
+// function runFastDownward(domainFile, problemFile) {
+//   return new Promise((resolve, reject) => {
+//     // const fastDownwardPath = '/Users/queenmother/Documents/Workspace/study-plan-generator/downward/fast-downward.py';
+//     // const command = `${fastDownwardPath} --alias lama-first ${domainFile} ${problemFile}`;
+//     const fastDownwardPath = process.env.LOCAL_PLANNER_PATH || '/usr/bin/fast-downward.py';
+  
+//     return new Promise((resolve, reject) => {
+//       const command = `${fastDownwardPath} --alias lama-first ${domainFile} ${problemFile}`;
+
+//     // const command = [
+//     //   'docker run --rm',
+//     //   `-v ${path.dirname(domainFile)}:/data`,
+//     //   'aibasel/downward:latest',
+//     //   '--alias lama-first',
+//     //   `/data/${path.basename(domainFile)}`,
+//     //   `/data/${path.basename(problemFile)}`
+//     // ].join(' ');
+
+
+//     exec(command, (error, stdout, stderr) => {
+//       if (error) {
+//         console.log('Fast downward error: ', error);
+//         reject(`Error: ${error.message}`);
+//         return;
+//       }
+
+//       if (stderr) {
+//         console.error('Fast Downward stderr:', stderr);
+//         reject(`Stderr: ${stderr}`);
+//         return;
+//       }
+
+//       resolve(stdout);
+//     });
+//   });
+//   });
+// }
+
+async function runFastDownward(domainFile, problemFile) {
   return new Promise((resolve, reject) => {
-    const fastDownwardPath = '/Users/queenmother/Documents/Workspace/study-plan-generator/downward/fast-downward.py';
-    const command = `${fastDownwardPath} --alias lama-first ${domainFile} ${problemFile}`;
+    // Use relative path for Vercel
+    const fastDownwardPath = process.env.LOCAL_PLANNER_PATH || 
+      './downward/fast-downward.py';
+
+    const command = `python3 ${fastDownwardPath} --alias lama-first ${domainFile} ${problemFile}`;
 
     exec(command, (error, stdout, stderr) => {
       if (error) {
-        console.log('Fast downward error: ', error);
+        console.error('Fast Downward error:', error);
         reject(`Error: ${error.message}`);
         return;
       }
-
-      if (stderr) {
-        console.error('Fast Downward stderr:', stderr);
-        reject(`Stderr: ${stderr}`);
-        return;
-      }
-
       resolve(stdout);
     });
   });
 }
 
-function cleanupFiles(filePaths) {
-  filePaths.forEach((filePath) => {
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
-    }
-  });
-}
+// function cleanupFiles(filePaths) {
+//   filePaths.forEach((filePath) => {
+//     if (fs.existsSync(filePath)) {
+//       fs.unlinkSync(filePath);
+//     }
+//   });
+// }
 
+// Update cleanup function
+function cleanupFiles(filePaths) {
+  try {
+    filePaths.forEach(filePath => {
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    });
+    
+    // Clean up directory
+    const tmpDir = '/tmp/pddl-workflow';
+    if (fs.existsSync(tmpDir)) {
+      fs.rmdirSync(tmpDir, { recursive: true });
+    }
+  } catch (cleanupError) {
+    console.error('Cleanup failed:', cleanupError);
+  }
+}
 async function measureWorkflow(workflowFn, history){
   const startTime = Date.now();
   let result, failure = false, errorMessage = null;
