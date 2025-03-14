@@ -286,25 +286,59 @@ const { exec } = require('child_process');
 //   });
 // }
 
+// async function runFastDownward(domainFile, problemFile) {
+//   return new Promise((resolve, reject) => {
+//     // Use relative path for Vercel
+//     const fastDownwardPath = process.env.LOCAL_PLANNER_PATH || 
+//       './downward/fast-downward.py';
+
+//     const command = `python3 ${fastDownwardPath} --alias lama-first ${domainFile} ${problemFile}`;
+
+//     exec(command, (error, stdout, stderr) => {
+//       if (error) {
+//         console.error('Fast Downward error:', error);
+//         reject(`Error: ${error.message}`);
+//         return;
+//       }
+//       resolve(stdout);
+//     });
+//   });
+// }
+
 async function runFastDownward(domainFile, problemFile) {
-  return new Promise((resolve, reject) => {
-    // Use relative path for Vercel
-    const fastDownwardPath = process.env.LOCAL_PLANNER_PATH || 
-      './downward/fast-downward.py';
+  const isProduction = process.env.NODE_ENV === 'production';
+  const tmpDir = '/tmp/pddl-workflow';
 
-    const command = `python3 ${fastDownwardPath} --alias lama-first ${domainFile} ${problemFile}`;
+  if (isProduction) {
+    // Docker-based execution for Vercel
+    return new Promise((resolve, reject) => {
+      const command = [
+        'docker run --rm',
+        `-v ${tmpDir}:/data`,
+        'aibasel/downward:latest',
+        '--alias lama-first',
+        `/data/${path.basename(domainFile)}`,
+        `/data/${path.basename(problemFile)}`
+      ].join(' ');
 
-    exec(command, (error, stdout, stderr) => {
-      if (error) {
-        console.error('Fast Downward error:', error);
-        reject(`Error: ${error.message}`);
-        return;
-      }
-      resolve(stdout);
+      exec(command, (error, stdout, stderr) => {
+        if (error) return reject(`Docker error: ${error.message}`);
+        resolve(stdout);
+      });
     });
-  });
+  } else {
+    // Local execution
+    const fastDownwardPath = './downward/fast-downward.py';
+    return new Promise((resolve, reject) => {
+      exec(`python3 ${fastDownwardPath} --alias lama-first ${domainFile} ${problemFile}`, 
+        (error, stdout, stderr) => {
+          if (error) reject(`Local error: ${error.message}`);
+          resolve(stdout);
+        }
+      );
+    });
+  }
 }
-
 // function cleanupFiles(filePaths) {
 //   filePaths.forEach((filePath) => {
 //     if (fs.existsSync(filePath)) {
