@@ -3,6 +3,7 @@ import Groq from 'groq-sdk';
 import { isAsyncFunction } from 'util/types';
 import { db } from '@/app/lib/firebase';
 import { collection, addDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
+import fetch from 'node-fetch';
 
 
 const groqClient = new Groq({ apiKey: process.env.ATHENAGROQ_API_KEY });
@@ -305,40 +306,40 @@ const { exec } = require('child_process');
 //   });
 // }
 
-async function runFastDownward(domainFile, problemFile) {
-  const isProduction = process.env.NODE_ENV === 'production';
-  const tmpDir = '/tmp/pddl-workflow';
+// async function runFastDownward(domainFile, problemFile) {
+//   const isProduction = process.env.NODE_ENV === 'production';
+//   const tmpDir = '/tmp/pddl-workflow';
 
-  if (isProduction) {
-    // Docker-based execution for Vercel
-    return new Promise((resolve, reject) => {
-      const command = [
-        'docker run --rm',
-        `-v ${tmpDir}:/data`,
-        'aibasel/downward:latest',
-        '--alias lama-first',
-        `/data/${path.basename(domainFile)}`,
-        `/data/${path.basename(problemFile)}`
-      ].join(' ');
+//   if (isProduction) {
+//     // Docker-based execution for Vercel
+//     return new Promise((resolve, reject) => {
+//       const command = [
+//         'docker run --rm',
+//         `-v ${tmpDir}:/data`,
+//         'aibasel/downward:latest',
+//         '--alias lama-first',
+//         `/data/${path.basename(domainFile)}`,
+//         `/data/${path.basename(problemFile)}`
+//       ].join(' ');
 
-      exec(command, (error, stdout, stderr) => {
-        if (error) return reject(`Docker error: ${error.message}`);
-        resolve(stdout);
-      });
-    });
-  } else {
-    // Local execution
-    const fastDownwardPath = './downward/fast-downward.py';
-    return new Promise((resolve, reject) => {
-      exec(`python3 ${fastDownwardPath} --alias lama-first ${domainFile} ${problemFile}`, 
-        (error, stdout, stderr) => {
-          if (error) reject(`Local error: ${error.message}`);
-          resolve(stdout);
-        }
-      );
-    });
-  }
-}
+//       exec(command, (error, stdout, stderr) => {
+//         if (error) return reject(`Docker error: ${error.message}`);
+//         resolve(stdout);
+//       });
+//     });
+//   } else {
+//     // Local execution
+//     const fastDownwardPath = './downward/fast-downward.py';
+//     return new Promise((resolve, reject) => {
+//       exec(`python3 ${fastDownwardPath} --alias lama-first ${domainFile} ${problemFile}`, 
+//         (error, stdout, stderr) => {
+//           if (error) reject(`Local error: ${error.message}`);
+//           resolve(stdout);
+//         }
+//       );
+//     });
+//   }
+// }
 // function cleanupFiles(filePaths) {
 //   filePaths.forEach((filePath) => {
 //     if (fs.existsSync(filePath)) {
@@ -346,6 +347,31 @@ async function runFastDownward(domainFile, problemFile) {
 //     }
 //   });
 // }
+
+
+
+async function runFastDownward(domainFile, problemFile) {
+  // Read the PDDL files from disk
+  const domainContent = fs.readFileSync(domainFile, 'utf-8');
+  const problemContent = fs.readFileSync(problemFile, 'utf-8');
+
+  const plannerUrl = process.env.REMOTE_PLANNER_API; 
+
+  const response = await fetch(plannerUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      domain: domainContent,
+      problem: problemContent,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Planner API error: ${response.statusText}`);
+  }
+
+  return await response.text();
+}
 
 // Update cleanup function
 function cleanupFiles(filePaths) {
