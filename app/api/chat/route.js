@@ -170,8 +170,20 @@ async function generatePDDL(history) {
 async function pddlPlannerWorkflow(history) {
   try {
     // Verify planner availability
-     const testResponse = await fetch(`${process.env.REMOTE_PLANNER_API}/test-planner`);
-     if (!testResponse.ok) throw new Error("Planner not ready");
+    // console.log('Planner API URL:', `${process.env.REMOTE_PLANNER_API}/plan`);
+    // const testResponse = await fetch(`${process.env.REMOTE_PLANNER_API}/plan`, {
+    //   timeout: 5000 
+    // });
+     
+    // if (!testResponse.ok) {
+    //   console.error('Planner test failed:', await testResponse.text());
+    //   throw new Error(`Planner responded with ${testResponse.status}`);
+    // }
+    
+    // const result = await testResponse.text();
+    // if (!result.includes("Fast Downward")) {
+    //   throw new Error("Invalid planner response");
+    // }
     // Generate PDDL files
     const { domainPDDL, problemPDDL } = await generatePDDL(history);
     console.log("Generated domain PDDL:", domainPDDL);
