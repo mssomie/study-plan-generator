@@ -169,6 +169,9 @@ async function generatePDDL(history) {
 
 async function pddlPlannerWorkflow(history) {
   try {
+    // Verify planner availability
+     const testResponse = await fetch(`${process.env.REMOTE_PLANNER_API}/test-planner`);
+     if (!testResponse.ok) throw new Error("Planner not ready");
     // Generate PDDL files
     const { domainPDDL, problemPDDL } = await generatePDDL(history);
     console.log("Generated domain PDDL:", domainPDDL);
@@ -192,6 +195,7 @@ async function pddlPlannerWorkflow(history) {
     return naturalPlan;
   } catch (error) {
     console.error('Error handling request:', error);
+    console.error('Planner check failed:', error);
     return `Error: ${error.message}`;
   }
 }
@@ -349,30 +353,52 @@ const { exec } = require('child_process');
 // }
 
 
+// Last worked on local but not production
+// async function runFastDownward(domainFile, problemFile) {
+//   // Read the PDDL files from disk
+//   const domainContent = fs.readFileSync(domainFile, 'utf-8');
+//   const problemContent = fs.readFileSync(problemFile, 'utf-8');
+
+//   const plannerUrl = process.env.REMOTE_PLANNER_API; 
+
+//   const response = await fetch(plannerUrl, {
+//     method: 'POST',
+//     headers: { 'Content-Type': 'application/json' },
+//     body: JSON.stringify({
+//       domain: domainContent,
+//       problem: problemContent,
+//     }),
+//   });
+
+//   if (!response.ok) {
+//     throw new Error(`Planner API error: ${response.statusText}`);
+//   }
+
+//   return await response.text();
+// }
 
 async function runFastDownward(domainFile, problemFile) {
-  // Read the PDDL files from disk
-  const domainContent = fs.readFileSync(domainFile, 'utf-8');
-  const problemContent = fs.readFileSync(problemFile, 'utf-8');
+  try {
+    const response = await fetch(process.env.REMOTE_PLANNER_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        domain: fs.readFileSync(domainFile, 'utf-8'),
+        problem: fs.readFileSync(problemFile, 'utf-8')
+      })
+    });
 
-  const plannerUrl = process.env.REMOTE_PLANNER_API; 
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`API Error ${response.status}: ${errorText}`);
+    }
 
-  const response = await fetch(plannerUrl, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      domain: domainContent,
-      problem: problemContent,
-    }),
-  });
-
-  if (!response.ok) {
-    throw new Error(`Planner API error: ${response.statusText}`);
+    return await response.text();
+  } catch (error) {
+    console.error('Network error:', error);
+    throw new Error(`Failed to reach planner: ${error.message}`);
   }
-
-  return await response.text();
 }
-
 // Update cleanup function
 function cleanupFiles(filePaths) {
   try {
