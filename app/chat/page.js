@@ -40,7 +40,6 @@ const ChatPage = () => {
         await auth.authStateReady();
         const user = auth.currentUser;
         setGlobalUser(user);
-        console.log(`user: ${user}, globalUser: ${ globalUser} `)
   
         
         if(!user){
@@ -233,8 +232,8 @@ const ChatPage = () => {
                       <Typography variant="h2" textAlign={"center"}>
                         Study Plans✨
                       </Typography>
-                      <Typography variant="body2" textAlign={"center"}>
-                      Generate recipes with our talented chef AI
+                      <Typography variant="body1" textAlign={"center"}>
+                      Here are the plans I've crafted for you. Click on the expand icon to view the details.
                       </Typography>
                      
                   
@@ -269,7 +268,7 @@ const ChatPage = () => {
                                       Error: {workflowResults[key].error}
                                     </Typography>
                                   ) : (
-                                    <Typography variant="body2" sx={{ whiteSpace: "pre-line" }}>
+                                    <Typography variant="body1" sx={{ whiteSpace: "pre-line" }}>
                                       <ReactMarkdown>{workflowResults[key].result}</ReactMarkdown>
                                     </Typography>
                                   )}

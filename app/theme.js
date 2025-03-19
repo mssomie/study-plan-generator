@@ -20,7 +20,7 @@ fontClassName: signika.className,
       main: '#D32A73', 
     },
     text: {
-      primary: '#E4E8E9', 
+      primary: '#ffffff', 
     },
     card: {
       main: '#071b33', 
@@ -29,6 +29,10 @@ fontClassName: signika.className,
 
   typography:{
     fontFamily: signika.style.fontFamily,
+    title:{
+      fontSize: '72px',
+      fontWeight: 900
+    },
     h1:{
         fontSize: '44px',
         fontWeight: 700
@@ -41,13 +45,17 @@ fontClassName: signika.className,
         fontSize: '24px',
         // fontWeight: 700
     },
+    h6:{
+      fontSize: '24px',
+      fontWeight: 700
+  },
     body1:{
         fontSize: '16px',
-        // fontWeight: 700
+        fontWeight: 300
     },
     body2:{
-      fontSize: '16px',
-      fontWeight: 200
+      fontSize: '20px',
+      // fontWeight: 200
   },
     label:{
         fontSize: '16px',
@@ -79,7 +87,7 @@ fontClassName: signika.className,
           },
           '& input': {
             fontFamily: signika.style.fontFamily,
-            fontSize: '14px',
+            fontSize: '16px',
           },
         },
       },
@@ -90,7 +98,7 @@ fontClassName: signika.className,
          
           '& input': {
             fontFamily: signika.style.fontFamily,
-            fontSize: '14px',
+            fontSize: '16px',
           },
         },
       },
@@ -99,9 +107,11 @@ fontClassName: signika.className,
         styleOverrides: {
           root: {
             fontFamily: signika.style.fontFamily,
-            fontSize: '14px',
-            textTransform: 'none', // Prevent text transformation
+            fontSize: '16px',
+            textTransform: 'none', 
             borderRadius: '16px',
+            backgroundColor: '#0cf7b2',
+            color: 'black',
           },
         },
       },
@@ -109,7 +119,7 @@ fontClassName: signika.className,
         styleOverrides: {
           root: {
             fontFamily: signika.style.fontFamily,
-            fontSize: '14px', 
+            fontSize: '16px', 
           },
         },
     },
