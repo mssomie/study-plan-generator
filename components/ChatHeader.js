@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Box, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import { ChevronLeft } from "lucide-react";
 
 export const ChatHeader = () => {
@@ -9,6 +9,7 @@ export const ChatHeader = () => {
         // backgroundColor: "#061737",
         display: "flex",
         padding: "20px",
+        paddingBottom: "0px",
       }}
     >
       <Box
@@ -30,10 +31,16 @@ export const ChatHeader = () => {
           <Link href="/">
             <ChevronLeft color="white" size={32} />
           </Link>
-
+          <Stack direction="column" gap="10px">
           <Typography variant="h4" fontWeight="600" color="white">
-            Athena✨
+            {/* Athena✨ */}
+            2. The Experiment
           </Typography>
+          <Typography variant="body" fontWeight="600" color="white" sx={{fontWeight: 300}}>
+            {/* Athena✨ */}
+           Once completed, scroll down and click the continue button to proceed to the next step.
+          </Typography>
+          </Stack>
         </Box>
       </Box>
     </Box>

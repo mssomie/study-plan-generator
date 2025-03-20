@@ -27,6 +27,8 @@ fontClassName: signika.className,
     },
   },
 
+
+
   typography:{
     fontFamily: signika.style.fontFamily,
     title:{
@@ -49,6 +51,58 @@ fontClassName: signika.className,
       fontSize: '24px',
       fontWeight: 700
   },
+  body:{
+    fontSize: '14px',
+    fontWeight: 300
+},
+ 
+    body1:{
+        fontSize: '16px',
+        fontWeight: 300
+    },
+    body2:{
+      fontSize: '20px',
+      // fontWeight: 200
+  },
+    label:{
+        fontSize: '16px',
+        fontWeight: 300,
+        color: '#4c5e63',
+    },
+    button: {
+        fontFamily: signika.style.fontFamily,
+        fontSize: '14px',
+        textTransform: 'none', 
+      },
+  },
+
+  ReactMarkDown:{
+    fontFamily: signika.style.fontFamily,
+    title:{
+      fontSize: '72px',
+      fontWeight: 900
+    },
+    h1:{
+        fontSize: '44px',
+        fontWeight: 700
+    },
+    h2:{
+        fontSize: '36px',
+        fontWeight: 500
+    },
+    h3:{
+        fontSize: '24px',
+        // fontWeight: 700
+    },
+    h6:{
+      fontSize: '24px',
+      fontWeight: 700
+  },
+  body:{
+    fontSize: '14px',
+    fontWeight: 300
+},
+ 
     body1:{
         fontSize: '16px',
         fontWeight: 300

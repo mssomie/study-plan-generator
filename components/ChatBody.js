@@ -1,16 +1,17 @@
 import { Bot, User } from "lucide-react";
 import ReactMarkdown from "react-markdown";
-import { Avatar, Box } from "@mui/material";
-
+import { Avatar, Box, ThemeProvider, Typography } from "@mui/material";
+import theme from "@/app/theme";
 
 export const ChatBody = ({ messages }) => {
   return (
-    <Box
+    <ThemeProvider theme={theme}>
+       <Box
       sx={{
         flex: "1",
         overflowY: "auto",
         paddingX: { md: "50px", xs: "10px" },
-        display: { md: "10px 70px", xs: "10px 30px" },
+        // display: { md: "10px 70px", xs: "10px 30px" },
       }}
     >
       {messages.map((message) => (
@@ -48,13 +49,19 @@ export const ChatBody = ({ messages }) => {
                 color:
                 message.role === "assistant" ? "white" : "black",
                 listStylePosition: "inside", 
+                fontSize: '16px',
+                fontWeight: 300
               }}
             >
-              <ReactMarkdown>{message.content}</ReactMarkdown>
+              {/* <Typography variant="body1"> */}
+              <ReactMarkdown variant="body1">{message.content}</ReactMarkdown>
+              {/* </Typography> */}
             </Box>
           </Box>
         </Box>
       ))}
     </Box>
+  </ThemeProvider>
+   
   );
 };

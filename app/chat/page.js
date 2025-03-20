@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Box,
   Button,
@@ -15,7 +15,11 @@ import {
   DialogContent,
   Typography,
   ThemeProvider,
-  Stack
+  Stack,
+  DialogContentText,
+  FormControlLabel,
+  Checkbox,
+  DialogActions
 } from "@mui/material";
 import OpenInFullIcon from '@mui/icons-material/OpenInFull';
 import { ChatBody } from "@/components/ChatBody";
@@ -67,6 +71,7 @@ const ChatPage = () => {
   }, []);
 
 
+  
 
 
 // Chat Management
@@ -101,6 +106,30 @@ const ChatPage = () => {
     role: "assistant",
     content: "Initial system message",
   }]);
+
+  // Survey Popup 
+  const [open, setOpen] = useState(false);
+  const [downloadChecked, setDownloadChecked] = useState(true);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  }
+
+  const handleContinue = () => {  
+    if (downloadChecked) {
+      downloadAnswersAsPDF();
+    }
+  
+    goToSurvey();
+  }
+
+
+  const downloadAnswersAsPDF = () => {
+    console.log("Downloading answers as PDF");
+  }
+  const handleClose = () => {
+    setOpen(false);
+  }
 
 
 
@@ -170,6 +199,18 @@ const ChatPage = () => {
     promptEngineering: "🌿 Myrmidon",
   };
 
+  // Shuffle order of cards
+  const shuffledCardKeys = useMemo(() => {
+    const keys = Object.keys(cardTitles);
+  
+    for (let i = keys.length - 1; i > 0; i--) {   
+      const j = Math.floor(Math.random() * (i + 1));
+      [keys[i], keys[j]] = [keys[j], keys[i]];
+    }
+    return keys;
+  }, []);
+
+  
   const goToSurvey = async () =>{
     try{
       if (!globalUser){
@@ -206,34 +247,37 @@ const ChatPage = () => {
   return (
     
     <ThemeProvider theme={theme}>
+     
       <Box
       sx={{
         minHeight: '100vh',
-        backgroundColor: theme.palette.background.default, // Apply background color from the theme
+        backgroundColor: theme.palette.background.default,
         color: theme.palette.text.primary,
         display: 'flex',
         flexDirection: 'column',
+        
       }}
     >
+       <ChatHeader />
         <Container sx={{
-          flex: 1, // Allow the container to grow and fill the available space
-          padding: 2,
+          flex: 1, 
+          // padding: 2,
         }}>
-          <Grid container spacing ={3} style ={{marginTop: '20px'}}>
-          <Grid item xs = {12} md ={3}>
+          <Grid container spacing ={3} sx ={{marginTop: '20px'}}>
+          <Grid item xs = {12} md ={3} sx={{p:0}}>
                 <CustomCard sx={{ 
-                  minHeight: '100vh',
-                  maxHeight: '100vh',
+                  minHeight: '90vh',
+                  maxHeight: '90vh',
                   backgroundColor: "#071b33",
 
                   overflow: 'scroll'}}>
                   <CardContent>
                     <Box p={1}>
-                      <Typography variant="h2" textAlign={"center"}>
+                      <Typography variant="h3" textAlign={"center"}>
                         Study Plans✨
                       </Typography>
-                      <Typography variant="body1" textAlign={"center"}>
-                      Here are the plans I've crafted for you. Click on the expand icon to view the details.
+                      <Typography variant="body" textAlign={"center"}>
+                    Click on the expand icon to view the details.
                       </Typography>
                      
                   
@@ -247,24 +291,26 @@ const ChatPage = () => {
                           borderRadius: 2,
                           maxHeight: "100vh",
                           overflowY: "auto",
+                        
                         }}
                       >
                         <Grid container spacing={2}>
-                          {Object.keys(cardTitles).map((key) => (
+                          {shuffledCardKeys.map((key) => (
                             <Grid item xs={12} sm={12} key={key}>
-                              <CustomCard sx={{ height: "100%", borderRadius: "12px", backgroundColor: "#03111a", borderColor: "#fff4b6" }}>
+                              <CustomCard sx={{ height: "100%", borderRadius: "12px", backgroundColor: "#03111a", borderColor: "#fff4b6", padding: "4px" }}>
                                 <CardHeader
                                   title={cardTitles[key]}
                                   action={
-                                    <IconButton size ="small" sx={{color: "#fff4b6"}} onClick={() => setExpandedCard(key)}>
+                                    
+                                    <IconButton size ="small" sx={{color: "#fff4b6", fontSize: "small", padding: "4px"}} onClick={() => setExpandedCard(key)}>
                                       <OpenInFullIcon />
                                     </IconButton>
                                   }
                                   sx={{ pb: 0 }}
                                 />
-                                <CardContent sx={{ maxHeight: 150, overflow: "hidden", p: 2 }}>
+                                <CardContent sx={{ maxHeight: 150, overflow: "hidden", p: 2,}}>
                                   {workflowResults[key].error ? (
-                                    <Typography variant="body2" color="error">
+                                    <Typography variant="body1" color="error">
                                       Error: {workflowResults[key].error}
                                     </Typography>
                                   ) : (
@@ -286,12 +332,13 @@ const ChatPage = () => {
                           maxWidth="md"
                           sx={{
                             backgroundColor: "#03111a",
+                            margin: "40px"
                           }}
                         >
                           <DialogTitle sx={{ backgroundColor: "#03111a" }}>
                             {expandedCard ? cardTitles[expandedCard] : ""}
                           </DialogTitle>
-                          <DialogContent dividers sx={{ backgroundColor: "#03111a" }}>
+                          <DialogContent dividers sx={{ backgroundColor: "#03111a", padding:"5%" }}>
                             {workflowResults[expandedCard]?.error ? (
                               <Typography variant="body1" color="error">
                                 <ReactMarkdown>Error: {workflowResults[expandedCard].error}</ReactMarkdown>
@@ -309,19 +356,20 @@ const ChatPage = () => {
                   </CardContent>
                 </CustomCard>
               </Grid>
-              <Grid item xs = {12} md ={9}>
+              <Grid item xs = {12} md ={9} >
               <CustomCard
                 sx={{
-                  height: "100vh",
+                  minHeight: "90vh",
+                  maxHeight: "90vh",
                   width: "100%",
                   backgroundColor: "#071b33",
                   display: "flex",
                   flexDirection: "column",
                   color: "#EDF6F9",
-                  p: 2, // overall page margin
+                  p: 2, 
                 }}
               >
-                <ChatHeader />
+                {/* <ChatHeader /> */}
                 <ChatBody messages={messages} sx={{ flex: 1, overflowY: "auto", mb: 2 }} />
                 <ChatForm message={message} setMessage={setMessage} sendMessage={sendMessage} />
 
@@ -332,26 +380,57 @@ const ChatPage = () => {
         </Container>
         <Stack 
         spacing={2}
-        direction="row">
+        direction="row"
+        sx={{
+          justifyContent: "center",
+          alignItems: "center",
+          p: 2,
+        }}>
           <Button
-            onClick = {goToSurvey}
+            onClick = {handleClickOpen}
             variant="contained"
             sx={{
               background: "#0cf7b2",
               color:"black",
-              fontWeight: "bold",
+              fontWeight: "normal",
               textTransform: "capitalize",
-              borderRadius: "12px",
+              borderRadius: "40px",
+              width: {md:"200px", xs: "100px"},
+              height: {md:"50px", xs: "40px"},
               padding: { md: "15px 25px", xs: "10px 10px" },
             }}
           >
-            Survey
+            Continue
           </Button>
-     
-          
 
         </Stack>
+        
       </Box>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Download Answers</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Do you want to download your answers for reference during the survey?
+          </DialogContentText>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={downloadChecked}
+                onChange={(e) => setDownloadChecked(e.target.checked)}
+              />
+            }
+            label="Download PDF with answers"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleContinue} color="primary">
+            Continue
+          </Button>
+        </DialogActions>
+      </Dialog>
     </ThemeProvider>
   );
 };
