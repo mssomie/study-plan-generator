@@ -298,6 +298,7 @@ const ChatPage = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          uid: globalUser.uid,
           zeroShotHistory: [...zeroShotHistory, userMessage],
           promptEngineeringHistory: [...promptEngineeringHistory, userMessage],
           pddlPlannerHistory: [...pddlPlannerHistory, userMessage],

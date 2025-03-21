@@ -457,7 +457,7 @@ export async function POST(req) {
   }
 
   console.log(data)
-  const {zeroShotHistory, promptEngineeringHistory, pddlPlannerHistory} = data;
+  const {uid, zeroShotHistory, promptEngineeringHistory, pddlPlannerHistory} = data;
 
   // if (!Array.isArray(data.messages)) {
   //   return new NextResponse('Invalid messages format', { status: 400 });
@@ -476,6 +476,7 @@ export async function POST(req) {
       ])
       // Save to Firestore
       const promptRef = await addDoc(collection(db, 'prompts'), {
+        user_id: uid,
         prompt: zeroShotHistory[zeroShotHistory.length-1].content,
         zeroShotResponse: zeroShot.result,
         promptEngineeringResponse: promptEngineering.result,
@@ -484,6 +485,7 @@ export async function POST(req) {
       });
 
       await addDoc(collection(db, 'performance'), {
+        user_id: uid,
         promptId: promptRef.id,
         zeroShotTime: zeroShot.timeTaken,
         promptEngineeringTime: promptEngineering.timeTaken,
@@ -501,6 +503,7 @@ export async function POST(req) {
       // Save generated PDDLs into firebase
     const {domainPDDL, problemPDDL } = await generatePDDL(pddlPlannerHistory);
     await addDoc(collection(db, 'pddls'), {
+      user_id: uid,
       promptId: promptRef.id,
       domainPddl: domainPDDL,
       problemPddl: problemPDDL,
