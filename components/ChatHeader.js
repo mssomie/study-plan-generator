@@ -34,11 +34,11 @@ export const ChatHeader = () => {
           <Stack direction="column" gap="10px">
           <Typography variant="h4" fontWeight="600" color="white">
             {/* Athena✨ */}
-            2. The Experiment
+            The Experiment
           </Typography>
           <Typography variant="body" fontWeight="600" color="white" sx={{fontWeight: 300}}>
             {/* Athena✨ */}
-           Once completed, scroll down and click the continue button to proceed to the next step.
+           Prompt the system to generate study plans. Once you're satisfied with the results, click on the continue button below to proceed to hte next page 
           </Typography>
           </Stack>
         </Box>

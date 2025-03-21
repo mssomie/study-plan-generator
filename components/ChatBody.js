@@ -45,7 +45,9 @@ export const ChatBody = ({ messages }) => {
                 borderRadius: "12px",
                 padding: "12px",
                 backgroundColor:
-                  message.role === "assistant" ? "#203347" : "#0cf7b2",
+                  // message.role === "assistant" ? "#203347" : "#0cf7b2",
+                  message.role === "assistant" ? "#03111a" : "#0cf7b2",
+
                 color:
                 message.role === "assistant" ? "white" : "black",
                 listStylePosition: "inside", 
