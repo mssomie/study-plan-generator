@@ -30,7 +30,7 @@ import { db } from '@/app/lib/firebase';
 import {useEffect} from 'react';
 
 
-const ChatPage = () => {
+const thankPage = () => {
   
   let globalUser
   // Access verification
@@ -39,8 +39,7 @@ const ChatPage = () => {
       try{
         await auth.authStateReady();
         const user = auth.currentUser;
-        globalUser = user;
-        console.log(`user: ${user} `)
+       
   
         
         if(!user){
@@ -170,7 +169,7 @@ const ChatPage = () => {
   const goToSurvey = async () =>{
       console.log('Button clicked')
       // redirect to survey form
-      window.location.href = `/survey?uid=${globalUser.uid}`;
+      // window.location.href = `/survey?uid=${globalUser.uid}`;
   }
 
   return (
@@ -242,4 +241,4 @@ const ChatPage = () => {
   );
 };
 
-export default ChatPage;
+export default thankPage;

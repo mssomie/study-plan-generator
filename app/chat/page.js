@@ -84,7 +84,7 @@ const ChatPage = () => {
       [keys[i], keys[j]] = [keys[j], keys[i]];
     }
     return keys;
-  }, []);
+  }, [cardTitles]);
 
   // Access verification
   useEffect(() => {
@@ -244,7 +244,7 @@ const ChatPage = () => {
           pdf.save('study_plan.pdf');
 
           await new Promise(resolve => setTimeout(resolve, 1000));
-          
+
           document.body.removeChild(pdfContent);
           resolve();
         } catch (error) {
