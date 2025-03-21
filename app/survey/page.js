@@ -32,7 +32,7 @@ function FormContent(){
 
     const unsubscribe = onSnapshot(doc(db, 'users', uid), (docSnap)=>{
       if (docSnap.exists() && docSnap.data().surveySubmitted){
-        window.location.href="/thanks";
+        // window.location.href="/thanks";
       }
     })
   
