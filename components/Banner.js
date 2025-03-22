@@ -169,6 +169,31 @@ export const Banner = () => {
           >
             Get Started
           </Button>
+
+          
+          <Box 
+            sx={{ 
+              position: "relative",
+              bottom: 0,    
+              color: "#0cf7b2",
+              paddingTop: "50px",
+              cursor: "pointer", // indicates it's clickable,
+              textDecoration: "underline", // 
+              "&:hover": { color: "white" } // changes color on hover
+            }}
+            
+          >
+            <Typography variant="body1" onClick={() => {
+              const link = document.createElement("a");
+              link.href = "/details.pdf"; // Replace with the actual path
+              link.download = "experiment.pdf"; // Desired file name on download
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+            }}>
+              Read about the experiment
+            </Typography>
+        </Box>
         </Box>
 
         {/* Image Section */}
