@@ -38,7 +38,7 @@ export const ChatHeader = () => {
           </Typography>
           <Typography variant="body" fontWeight="600" color="white" sx={{fontWeight: 300}}>
             {/* Athena✨ */}
-           Prompt the system to generate study plans. Once you are satisfied with the results, click on the continue button below to proceed to hte next page 
+           Prompt the system to generate study plans. Once you are satisfied with the results, click on the continue button below to proceed to next step. 
           </Typography>
           </Stack>
         </Box>
