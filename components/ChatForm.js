@@ -39,6 +39,7 @@ export const ChatForm = ({ message, setMessage, sendMessage }) => {
             value={message}
             onChange={(e) => {
               setMessage(e.target.value);
+          
             }}
             sx={{
               flex: 1,
@@ -60,6 +61,7 @@ export const ChatForm = ({ message, setMessage, sendMessage }) => {
                 background: "#03111a",
               },
             }}
+            multiline
           />
         </Box>
         <Button
