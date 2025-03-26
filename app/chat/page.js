@@ -505,7 +505,7 @@ const ChatPage = () => {
         </Container>
         <Stack 
           spacing={2}
-          direction="row"
+          direction="column"
           sx={{
             justifyContent: "center",
             alignItems: "center",
@@ -528,6 +528,7 @@ const ChatPage = () => {
           >
             Continue
           </Button>
+          <Typography variant="body1" sx={{ color: "#EDF6F9" }}>  Powered by Meta Llama 3.</Typography>
         </Stack>
       </Box>
       <Dialog open={open} onClose={handleClose} sx={{backgroundColor: '#03111a'}}>
